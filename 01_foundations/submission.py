@@ -32,7 +32,7 @@ def find_alphabetically_first_word(text: str) -> str:
     it is acceptable to either return an empty string or throw an error.
     """
     # BEGIN_YOUR_CODE (our solution is 1 line of code, but don't worry if you deviate from this)
-    raise Exception("Not implemented yet")
+    return min(text.split())
     # END_YOUR_CODE
 
 
@@ -45,7 +45,7 @@ def euclidean_distance(loc1: Position, loc2: Position) -> float:
     are pairs of numbers (e.g., (3, 5)).
     """
     # BEGIN_YOUR_CODE (our solution is 1 line of code, but don't worry if you deviate from this)
-    raise Exception("Not implemented yet")
+    return math.sqrt(sum([(x-y)**2 for x,y in zip(loc1,loc2)]))
     # END_YOUR_CODE
 
 
@@ -74,7 +74,30 @@ def mutate_sentences(sentence: str) -> List[str]:
                 (Reordered versions of this list are allowed.)
     """
     # BEGIN_YOUR_CODE (our solution is 17 lines of code, but don't worry if you deviate from this)
-    raise Exception("Not implemented yet")
+    words = sentence.split()
+    pairs = {}
+    cache = {}
+
+    for idx in range(len(words) - 1):
+      if words[idx] not in pairs:
+        pairs[words[idx]] = []
+      pairs[words[idx]].append(words[idx + 1])
+
+    def buildSentence(builtSentence, cache, requiredSentenceLength):
+      builtSentenceWords = builtSentence.split()
+      if len(builtSentenceWords) == requiredSentenceLength:
+        cache[builtSentence] = 1.0
+        return
+      
+      if builtSentenceWords[-1] in pairs.keys():
+        for word in pairs[builtSentenceWords[-1]]:
+          buildSentence(builtSentence + ' ' + word, cache, requiredSentenceLength)
+
+    for item in pairs.keys():
+       buildSentence(item, cache, len(words))
+
+    return list(cache.keys())  
+    
     # END_YOUR_CODE
 
 
@@ -92,15 +115,14 @@ def sparse_vector_dot_product(v1: SparseVector, v2: SparseVector) -> float:
     Note: A sparse vector has most of its entries as 0.
     """
     # BEGIN_YOUR_CODE (our solution is 1 line of code, but don't worry if you deviate from this)
-    raise Exception("Not implemented yet")
+    return sum(v1[key] * v2[key] for key in v1.keys() & v2.keys())
     # END_YOUR_CODE
 
 
 ############################################################
 # Problem 4e
 
-def increment_sparse_vector(v1: SparseVector, scale: float, v2: SparseVector,
-) -> None:
+def increment_sparse_vector(v1: SparseVector, scale: float, v2: SparseVector,) -> None:
     """
     Given two sparse vectors |v1| and |v2|, perform v1 += scale * v2.
     If the scale is zero, you are allowed to modify v1 to include any
@@ -111,7 +133,10 @@ def increment_sparse_vector(v1: SparseVector, scale: float, v2: SparseVector,
     This function will be useful later for linear classifiers!
     """
     # BEGIN_YOUR_CODE (our solution is 2 lines of code, but don't worry if you deviate from this)
-    raise Exception("Not implemented yet")
+
+    print(f"***{v1}***{v2}***{scale}***")
+    for key in v2.keys():
+      v1[key] = v1[key] + scale * v2[key] if key in v1.keys() else scale * v2[key]
     # END_YOUR_CODE
 
 
@@ -125,5 +150,12 @@ def find_nonsingleton_words(text: str) -> Set[str]:
     You might find it useful to use collections.defaultdict(int).
     """
     # BEGIN_YOUR_CODE (our solution is 4 lines of code, but don't worry if you deviate from this)
-    raise Exception("Not implemented yet")
+    nonSingletonWords = set()
+    words = {}
+    for word in text.split():
+       if word not in words:
+          words[word] = 1
+       else:
+          nonSingletonWords.add(word)
+    return nonSingletonWords
     # END_YOUR_CODE
